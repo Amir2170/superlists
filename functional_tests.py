@@ -1,5 +1,7 @@
 from selenium import webdriver
 import unittest 
+from selenium.webdriver.common.keys import Keys
+import time
 
 
 class NewVisitorTest(unittest.TestCase):
@@ -12,8 +14,29 @@ class NewVisitorTest(unittest.TestCase):
 		
 	def test_can_start_a_list_and_retrieve_it_later(self):
 		self.browser.get('http://localhost:8000')
+		#page title and header mention 'To-Do'
 		self.assertIn('To-Do', self.browser.title)
-		self.fail('Finish the test')
+		header_text = self.browser.find_element_by_tag_name('h1')
+		self.assertIn(header_text, 'To-Do')
+		#user is invited to enter a to-do list straight away
+		inputbox = self.browser.find_element_by_id('id_list_item')
+		self.assertEqual(inputbox.get_attribute('placeholder'), 
+			'Enter a to-do item')
+		#user types smt into text box
+		inputbox.send_keys('1: Buy peacock feathers')
+		#when user press Enter page will refresh and 
+		#put to-do list in specified text into the list
+		inputbox.send_keys(Keys.Enter)
+		time.sleep(1)
+		
+		table = find_element_by_id('id_list_table')
+		rows = find_elements_by_tag_name('tr')
+		self.assertTrue(
+			any(row.text == '1: Buy peacock feathers' for row in rows)
+			)
+		
+		self.fail('Finish Functional Test!')
+		
 	
 	
 if __name__ == '__main__':
